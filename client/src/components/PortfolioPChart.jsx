@@ -3,7 +3,6 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 var PortfolioPChart = ({ stocks }) => {
-  console.log('@@stock', stocks)
   var options = {
     chart: {
       plotBackgroundColor: null,
