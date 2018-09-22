@@ -15,7 +15,6 @@ class BuySell extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.stock)
   }
 
   handleQuantity(e) {

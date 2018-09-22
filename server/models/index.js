@@ -25,7 +25,6 @@ module.exports = {
       }
     })
     .then(() => {
-      console.log('@@userID',userId)
       return Transaction.create({
         user_id: userId,
         stock_ticker: stock,
@@ -40,7 +39,6 @@ module.exports = {
   },
 
   sellStock: function(stock, price = 1, userId = 1, quantity) {
-    console.log('@@modelID',userId);
     return Transaction.findAll({
       where: {
         stock_ticker: stock,
