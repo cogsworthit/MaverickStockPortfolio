@@ -15,7 +15,15 @@ import BuySell from './components/BuySell.jsx';
 
 import PortfolioChart from './components/PortfolioChart.jsx';
 import firebase from 'firebase'
-import config from '../../config.js'
+
+let config = {
+  apiKey: process.env.apiKey,
+  authDomain: process.env.authDomain,
+  databaseURL: process.env.databaseURL,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId
+}
 
 firebase.initializeApp(config)
 
