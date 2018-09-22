@@ -23,7 +23,6 @@ module.exports = {
       .then(({ data }) => {
         let buyPromises = [];
         for (var i = 0; i < req.body.quantity; i++) {
-          console.log('buy', req.body.userId)
           buyPromises.push(model.buyStock(req.body.stock, data, req.body.userId, req.body.transactionType))
         }
         Promise.all(buyPromises)
@@ -106,7 +105,7 @@ module.exports = {
   
   // Calls function in model to post stock ticker to database
   postStockTicker: (req, res) => {
-    model.saveStock(req.body.stock, req.body.quantity, req.body.price)
+    model.saveStock(req.body.stock, req.body.quantity, req.body.price, req.body.userId)
      .then((data) => {
         res.sendStatus(201);       
      })
@@ -118,7 +117,7 @@ module.exports = {
 
   // Calls function in model to get stock tickers and quantity of stock from database
   getStockTicker: function(req, res) {
-    model.getStocks(req.query.sort)
+    model.getStocks(req.query.sort, req.query.userId)
       .then((data) => {
         res.send(data);
       })

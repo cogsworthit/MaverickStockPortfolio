@@ -34,7 +34,7 @@ class App extends React.Component {
       view : 'signin',
       stocks: [],
       portfolioTotal: 0,
-      sortBy: 'Alphabetica',
+      sortBy: 'Alphabetical',
       portfolio: null,
       portfolioHistory: null,
       paneToggle: 'pie',
@@ -66,11 +66,7 @@ class App extends React.Component {
   }
   
   componentDidMount() {
-    // get all stocks for this user
-    this.getStocks(this.state.sortBy);
-
     // will update the stock prices every 10 seconds
-
 
     //will update the stock prices every 10 seconds
     // setInterval(this.updateAllStockPrices, 100000);
@@ -84,6 +80,7 @@ class App extends React.Component {
       })
       .then(user => {
         this.setUser(user.data)
+        this.getStocks(this.state.sortBy)
       })
       .catch(err => console.log(err))
     })
@@ -131,13 +128,10 @@ class App extends React.Component {
     this.setState({
       portfolio: []
     })
-    //temp fix
-    console.log('Update portfolio');
     axios.get('/api/holdings', {
       params: {userId: this.state.user.uid}
     })
       .then(({data}) => {
-        console.log('Got Portfolio')
         this.setState({
           portfolio: data
         })
@@ -152,7 +146,7 @@ class App extends React.Component {
   getStocks(sort) {
     sort = sort || this.state.sortBy;
     axios
-      .get('/api/stock', { params: { sort: sort } })
+      .get('/api/stock', { params: { sort: sort, userId: this.state.user.uid } })
       .then(({ data }) => {
         this.setStocks(data);
       })
@@ -262,7 +256,7 @@ class App extends React.Component {
 
   //calculates grand total value for list of stocks
   calculateTotal() {
-    if (Object.keys(this.state.portfolio).length > 0) {
+    if (this.state.portfolio && Object.keys(this.state.portfolio).length > 0) {
       const total = this.state.portfolio
         .map((stock) => {
           return stock.quantity * stock.price
@@ -275,7 +269,6 @@ class App extends React.Component {
   }
 
   changeView(option) {
-    console.log("Change the view to " + option)
     this.setState({
       view: option
     });
@@ -348,14 +341,14 @@ class App extends React.Component {
           <div className="columns">
             <div className="column border">
               {/* <SortBy updateSort={this.updateSort} /> */}
-              <ListOfStocks
+              {this.state.user && <ListOfStocks
                 stocksArray={this.state.portfolio}
                 removeCheckedBoxes={this.removeCheckedBoxes}
                 calculateTotal={this.calculateTotal}
                 portfolioTotal={this.state.portfolioTotal}
                 getStocks={this.getStocks}
                 toggleModal={this.toggleModal}
-              />
+              />}
             </div>
             {currentToggle}
           </div>
@@ -364,6 +357,7 @@ class App extends React.Component {
     } else if (view === 'research') {
       return (
         <Research 
+          user={this.state.user}
           stocks={this.state.stocks} 
           getStocks={this.getStocks} 
           removeStock={this.removeStock} 

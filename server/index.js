@@ -7,7 +7,6 @@ const server = app.listen(process.env.PORT, function() {
 
 const io = socket(server);
 io.on('connection', function(socket) {
-  console.log('Made a connection from server!', socket.id)
 
   socket.on('disconnect', () => {
     console.log('User disconnected')
