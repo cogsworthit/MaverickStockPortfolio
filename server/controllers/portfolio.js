@@ -11,7 +11,6 @@ module.exports = {
         .then(({data}) => {
           // now with the structure, create the object bones to return
           portfolio = calculatePortfolio(data, transactions)
-          console.log(portfolio)
           return calculateValueOfHoldings(portfolio, time)
         })
         .catch((err) => {
@@ -38,7 +37,7 @@ const calculatePortfolio = function(oneStockChartPoints, positions) {
 
   // Loop through each time period on the chart
   oneStockChartPoints.forEach((chartPoint) => {
-    let time = moment(chartPoint.date + ' ' + chartPoint.minute, 'YYYYMMDD H:mm').add(1, 'days');
+    let time = moment(chartPoint.date + ' ' + chartPoint.minute, 'YYYYMMDD H:mm')
     var filteredPositions = []
     var openPositions = {}
     var investedAmount = 0
@@ -97,7 +96,6 @@ const calculateValueOfHoldings = function(portfolio, time) {
         stockPriceArray.forEach((stock) => {
           stockPriceObject[stock.stock] = stock.data
         })
-
         // loop over time
         for (t = 0; t < portfolio.time.length; t++) {
           let openPoss = portfolio.openPositions[t]
@@ -108,7 +106,7 @@ const calculateValueOfHoldings = function(portfolio, time) {
             let currentValueOfThisStock = stockPriceObject[stock][t]
             let glOfStock = openHoldingsForThisStock.reduce((acc, stockPricePaid) => {
               // add the diff to the acc
-              if (currentValueOfThisStock['high'] !== -1) {
+              if (currentValueOfThisStock && currentValueOfThisStock['high'] && currentValueOfThisStock['high'] !== -1) {
                 return acc + (currentValueOfThisStock['high'] - stockPricePaid)
               } else {
                 return acc
@@ -126,10 +124,12 @@ const calculateValueOfHoldings = function(portfolio, time) {
             }
           }
           portfolio.valueOfHoldings.push(value)
-          if (unrealizedGLAtTheMoment !== 0) {
+          if (unrealizedGLAtTheMoment && unrealizedGLAtTheMoment !== 0) {
             portfolio.unrealizedGL.push(unrealizedGLAtTheMoment)
-          } else {
+          } else if (portfolio.unrealizedGL[portfolio.unrealizedGL.length - 1] !== null) {
             portfolio.unrealizedGL.push(portfolio.unrealizedGL[portfolio.unrealizedGL.length - 1])
+          } else {
+            portfolio.unrealizedGL.push(0)
           }
         }
 

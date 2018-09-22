@@ -5,7 +5,6 @@ import moment from 'moment';
 
 var PortfolioChart = ({portfolioHistory, option}) => {
   var ticker = option === 'unrealizedGL' ? 'Unrealized Gain/Loss' : option === 'realizedGL' ? 'Realized Gain/Loss' : 'Value of Holdings'
-  console.log(option)
   var lineData = portfolioHistory[option] && calcLine(portfolioHistory[option], portfolioHistory.time)
   var options = {
     // use data from currentStock

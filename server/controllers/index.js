@@ -23,7 +23,6 @@ module.exports = {
       .then(({ data }) => {
         let buyPromises = [];
         for (var i = 0; i < req.body.quantity; i++) {
-          console.log('buy', req.body.userId)
           buyPromises.push(model.buyStock(req.body.stock, data, req.body.userId, req.body.transactionType))
         }
         Promise.all(buyPromises)

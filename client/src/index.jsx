@@ -15,7 +15,15 @@ import BuySell from './components/BuySell.jsx';
 
 import PortfolioChart from './components/PortfolioChart.jsx';
 import firebase from 'firebase'
-import config from '../../config.js'
+
+let config = {
+  apiKey: process.env.apiKey,
+  authDomain: process.env.authDomain,
+  databaseURL: process.env.databaseURL,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId
+}
 
 firebase.initializeApp(config)
 
@@ -120,12 +128,10 @@ class App extends React.Component {
     this.setState({
       portfolio: []
     })
-    //temp fix
     axios.get('/api/holdings', {
       params: {userId: this.state.user.uid}
     })
       .then(({data}) => {
-        console.log('Got Portfolio')
         this.setState({
           portfolio: data
         })
@@ -250,7 +256,7 @@ class App extends React.Component {
 
   //calculates grand total value for list of stocks
   calculateTotal() {
-    if (Object.keys(this.state.portfolio).length > 0) {
+    if (this.state.portfolio && Object.keys(this.state.portfolio).length > 0) {
       const total = this.state.portfolio
         .map((stock) => {
           return stock.quantity * stock.price
@@ -263,7 +269,6 @@ class App extends React.Component {
   }
 
   changeView(option) {
-    console.log("Change the view to " + option)
     this.setState({
       view: option
     });
